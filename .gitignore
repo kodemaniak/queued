@@ -1,0 +1,14 @@
+target
+.DS_Store
+project/boot
+project/target
+project/plugins/target
+.target
+.project
+.settings
+.history
+.classpath
+.cache
+.bin/
+.ensime*
+*.log
