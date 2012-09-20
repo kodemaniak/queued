@@ -6,6 +6,9 @@ version := "0.1.0"
 
 scalaVersion := "2.9.2"
 
+// Publish in internal repository for now.
+publishTo := Some(Resolver.file("repository", new File("/var/www/repository")))
+
 libraryDependencies ++= Seq(
   "org.mongodb" %% "casbah" % "2.4.1",
   "com.novus" %% "salat" % "1.9.1",
