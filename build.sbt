@@ -2,7 +2,7 @@ organization := "kv"
 
 name := "queued"
 
-version := "0.1.0"
+version := "0.1.1-SNAPSHOT"
 
 scalaVersion := "2.9.2"
 
@@ -19,7 +19,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" % "akka-slf4j" % "2.0.3",
   "com.typesafe.akka" % "akka-testkit" % "2.0.3" % "test",
   "org.scalatest" %% "scalatest" % "1.7.1" % "test,it",
-  "org.mockito" % "mockito-core" % "1.9.0" % "test"
+  "org.mockito" % "mockito-core" % "1.9.0" % "test",
+  "org.clapper" %% "avsl" % "0.4"
 )
 
 scalacOptions ++= Seq("-encoding", "UTF-8", "-deprecation", "-unchecked")

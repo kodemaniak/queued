@@ -10,6 +10,7 @@ import akka.actor.OneForOneStrategy
 import akka.util.Timeout
 import akka.actor.SupervisorStrategy._
 import akka.actor.Terminated
+import akka.actor.LoggingFSM
 
 sealed trait PollingMessages
 case object Poll extends PollingMessages
@@ -23,22 +24,20 @@ case object AwaitingAck extends PollingState
 case object Working extends PollingState
 case object Stopped extends PollingState
 
-class UploadFailedException(msg: String) extends Exception(msg) {
-  def this() = this("")
-}
+class QueuePollingActor[M <: AnyRef](queue: PersistentQueue[M], workerBuilder: ActorContext => ActorRef, initialDelay: Duration = 0 seconds, frequency: Duration = 1 second)(implicit manifest: Manifest[M]) extends Actor with FSM[PollingState, Option[M]] {
 
-class QueuePollingActor[M <: AnyRef](queue: PersistentQueue[M], workerBuilder: ActorContext => ActorRef, initialDelay: Duration = 0 seconds, frequency: Duration = 1 second)(implicit manifest: Manifest[M]) extends Actor with FSM[PollingState, Option[(ActorRef, M)]] {
-
-  val worker = workerBuilder(context)
+  var worker: ActorRef = _
 
   override val supervisorStrategy = OneForOneStrategy() {
-    case _: UploadFailedException =>
+    case e: Exception =>
+      log.error("Requeueing job.")
+      log.error(e.getMessage)
       self ! RequeueJob
       Restart
   }
-
+  
   override def preStart {
-//        context.system.scheduler.schedule(initialDelay, frequency)(self ! Poll)
+    worker = workerBuilder(context)
   }
 
   startWith(Polling, None)
@@ -54,7 +53,7 @@ class QueuePollingActor[M <: AnyRef](queue: PersistentQueue[M], workerBuilder: A
         queue.dequeue match {
           case Some(job) =>
             worker ! job
-            goto(AwaitingAck) using (Some(worker, job))
+            goto(AwaitingAck) using (Some(job))
           case None =>
             workFinished()
             stay
@@ -67,14 +66,17 @@ class QueuePollingActor[M <: AnyRef](queue: PersistentQueue[M], workerBuilder: A
   }
 
   when(AwaitingAck, stateTimeout = 1 second) {
-    case Event(Acknowledge, Some((worker, job))) =>
+    case Event(Acknowledge, Some(job)) =>
       goto(Working)
-    case Event(FSM.StateTimeout, Some((worker, job))) =>
+    case Event(FSM.StateTimeout, Some(job)) =>
       queue.enqueue(job)
       goto(Stopped) using (None)
-    case Event(StopPolling, Some((worker, job))) =>
+    case Event(StopPolling, Some(job)) =>
       queue.enqueue(job)
       goto(Stopped) using (None)
+    case Event(RequeueJob, Some(job)) =>
+      queue.enqueue(job)
+      goto(Polling) using (None)
   }
 
   when(Working) {
@@ -85,10 +87,10 @@ class QueuePollingActor[M <: AnyRef](queue: PersistentQueue[M], workerBuilder: A
       } else {
         goto(Stopped) using (None)
       }
-    case Event(Terminated(child), Some((worker, job))) =>
+    case Event(Terminated(child), Some(job)) =>
       queue.enqueue(job)
       goto(Polling)
-    case Event(RequeueJob, Some((worker, job))) =>
+    case Event(RequeueJob, Some(job)) =>
       queue.enqueue(job)
       goto(Polling) using (None)
   }

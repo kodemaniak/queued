@@ -61,10 +61,10 @@ class QueuePollingTest(_system: ActorSystem) extends TestKit(_system) with FlatS
       probe.expectMsg(msg)
       Thread.sleep(250)
       q.stateName should be(AwaitingAck)
-      q.stateData should be(Some(probe.ref, msg))
+      q.stateData should be(Some(msg))
 	    probe.sender ! Acknowledge
 	    q.stateName should be(Working)
-	    q.stateData should be(Some(probe.ref, msg))
+	    q.stateData should be(Some(msg))
     }
     mockQueue.length should be(0)
     probe.sender ! WorkFinished
@@ -88,7 +88,7 @@ class QueuePollingTest(_system: ActorSystem) extends TestKit(_system) with FlatS
     probe.sender ! Acknowledge
     r ! StopPolling
     r.stateName should be(Stopped)
-    r.stateData should be(Some(probe.ref, msg))
+    r.stateData should be(Some(msg))
     probe.sender ! WorkFinished
     r.stateName should be(Stopped)
     r.stateData should be(None)
@@ -123,10 +123,12 @@ class QueuePollingTest(_system: ActorSystem) extends TestKit(_system) with FlatS
     mockQueue.enqueue(msg)
     val q = TestFSMRef(new QueuePollingActor(mockQueue, context => context.actorOf(Props(new Actor {
       def receive = LoggingReceive {
-        case u: TestMessage =>
+        case u =>
+          sender ! Acknowledge
           throw new Exception
       }
     }))))
+    q ! Poll
     Thread.sleep(1000)
     q.stateName should be(Polling)
     mockQueue.length should be(1)
