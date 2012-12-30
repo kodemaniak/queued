@@ -9,6 +9,7 @@ import com.novus.salat.global._
 import com.mongodb.casbah.MongoCollection
 import com.mongodb.casbah.commons.MongoDBObject
 import kv.queued.MongoQueue
+import scala.reflect._
 
 case class ExampleMessage(name: String, value: Int, properties: Map[String, String])
 

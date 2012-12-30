@@ -2,8 +2,7 @@ package kv.queued
 
 import akka.actor.ActorContext
 import akka.actor.ActorRef
-import akka.util.Duration
-import akka.util.duration._
+import scala.concurrent.duration._
 import akka.actor.Actor
 import akka.actor.FSM
 import akka.actor.OneForOneStrategy
@@ -24,7 +23,7 @@ case object AwaitingAck extends PollingState
 case object Working extends PollingState
 case object Stopped extends PollingState
 
-class QueuePollingActor[M <: AnyRef](queue: PersistentQueue[M], workerBuilder: ActorContext => ActorRef, initialDelay: Duration = 0 seconds, frequency: Duration = 1 second)(implicit manifest: Manifest[M]) extends Actor with FSM[PollingState, Option[M]] {
+class QueuePollingActor[M <: AnyRef](queue: PersistentQueue[M], workerBuilder: ActorContext => ActorRef, initialDelay: FiniteDuration = 0 seconds, frequency: FiniteDuration = 1 second)(implicit manifest: Manifest[M]) extends Actor with FSM[PollingState, Option[M]] {
 
   var worker: ActorRef = _
 

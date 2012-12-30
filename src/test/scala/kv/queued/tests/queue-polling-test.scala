@@ -15,10 +15,12 @@ import akka.event.LoggingReceive
 import akka.actor.Actor
 import akka.testkit.TestActor
 import akka.actor.ActorRef
-import akka.util.duration._
+import scala.concurrent.duration._
 import akka.actor.ActorContext
 import akka.actor.Props
 import kv.queued._
+import scala.reflect.runtime.universe._
+import scala.reflect._
 
 class QueuePollingTest(_system: ActorSystem) extends TestKit(_system) with FlatSpec with ShouldMatchers with BeforeAndAfterEach with BeforeAndAfterAll {
 
@@ -138,11 +140,11 @@ class QueuePollingTest(_system: ActorSystem) extends TestKit(_system) with FlatS
 class MemoryQueue[M <: AnyRef] extends PersistentQueue[M] {
   val queue = Queue[M]()
 
-  def enqueue(elem: M)(implicit manifest: Manifest[M]) {
+  def enqueue(elem: M)(implicit ttag: TypeTag[M], ctag: ClassTag[M]) {
     queue.enqueue(elem)
   }
 
-  def dequeue(implicit manifest: Manifest[M]) = queue.dequeueFirst(_ => true)
+  def dequeue(implicit ttag: TypeTag[M], ctag: ClassTag[M]) = queue.dequeueFirst(_ => true)
 
   def length = queue.length
 }

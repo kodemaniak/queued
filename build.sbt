@@ -4,27 +4,31 @@ name := "queued"
 
 version := "0.2.1-SNAPSHOT"
 
-scalaVersion := "2.9.2"
+scalaVersion := "2.10.0"
 
 // Publish in internal repository for now.
 publishTo := Some(Resolver.file("repository", new File("/var/www/repository")))
 
-resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
-
 libraryDependencies ++= Seq(
-  "org.mongodb" %% "casbah" % "2.4.1",
-  "com.novus" %% "salat" % "1.9.1",
+  "org.mongodb" %% "casbah-core" % "2.5.0-SNAPSHOT",
+  "org.mongodb" %% "casbah-query" % "2.5.0-SNAPSHOT",
+  "com.novus" %% "salat" % "1.9.2-SNAPSHOT",
   "redis.clients" % "jedis" % "2.0.0",
-  "com.typesafe.akka" % "akka-actor" % "2.0.4",
-  "com.typesafe.akka" % "akka-kernel" % "2.0.4",
-  "com.typesafe.akka" % "akka-remote" % "2.0.4",
-  "com.typesafe.akka" % "akka-slf4j" % "2.0.4",
-  "com.typesafe.akka" % "akka-testkit" % "2.0.4" % "test",
-  "org.scalatest" %% "scalatest" % "1.7.1" % "test,it",
+  "com.typesafe.akka" %% "akka-actor" % "2.1.0",
+  "com.typesafe.akka" %% "akka-kernel" % "2.1.0",
+  "com.typesafe.akka" %% "akka-remote" % "2.1.0",
+  "com.typesafe.akka" %% "akka-slf4j" % "2.1.0",
+  "com.typesafe.akka" %% "akka-testkit" % "2.1.0" % "test",
+  "org.scalatest" %% "scalatest" % "1.9.1" % "test,it",
   "org.mockito" % "mockito-core" % "1.9.0" % "test",
-  "org.clapper" %% "avsl" % "0.4"
+  "org.clapper" %% "avsl" % "1.0.1"
 )
 
-scalacOptions ++= Seq("-encoding", "UTF-8", "-deprecation", "-unchecked")
+scalacOptions ++= Seq("-encoding", "UTF-8", "-deprecation", "-unchecked", "-feature")
 
+resolvers ++= Seq(
+  "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
+  "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
+  "kreuzverweis" at "https://repository.kreuzverweis.com/"
+)
 
