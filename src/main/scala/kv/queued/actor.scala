@@ -1,5 +1,6 @@
 package kv.queued
 
+import reflect.runtime.universe.{TypeTag, typeTag}
 import akka.actor.ActorContext
 import akka.actor.ActorRef
 import scala.concurrent.duration._
@@ -23,7 +24,9 @@ case object AwaitingAck extends PollingState
 case object Working extends PollingState
 case object Stopped extends PollingState
 
-class QueuePollingActor[M <: AnyRef](queue: PersistentQueue[M], workerBuilder: ActorContext => ActorRef, initialDelay: FiniteDuration = 0 seconds, frequency: FiniteDuration = 1 second)(implicit manifest: Manifest[M]) extends Actor with FSM[PollingState, Option[M]] {
+class QueuePollingActor[M <: AnyRef]
+    (queue: PersistentQueue[M], workerBuilder: ActorContext => ActorRef, initialDelay: FiniteDuration = 0 seconds, frequency: FiniteDuration = 1 second)
+extends Actor with FSM[PollingState, Option[M]] {
 
   var worker: ActorRef = _
 

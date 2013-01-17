@@ -140,11 +140,11 @@ class QueuePollingTest(_system: ActorSystem) extends TestKit(_system) with FlatS
 class MemoryQueue[M <: AnyRef] extends PersistentQueue[M] {
   val queue = Queue[M]()
 
-  def enqueue(elem: M)(implicit ttag: TypeTag[M], ctag: ClassTag[M]) {
+  def enqueue(elem: M) {
     queue.enqueue(elem)
   }
 
-  def dequeue(implicit ttag: TypeTag[M], ctag: ClassTag[M]) = queue.dequeueFirst(_ => true)
+  def dequeue = queue.dequeueFirst(_ => true)
 
   def length = queue.length
 }
