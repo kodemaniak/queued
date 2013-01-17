@@ -12,7 +12,7 @@ publishTo := Some(Resolver.file("repository", new File("/var/www/repository")))
 libraryDependencies ++= Seq(
   "org.mongodb" %% "casbah-core" % "2.5.0-SNAPSHOT",
   "org.mongodb" %% "casbah-query" % "2.5.0-SNAPSHOT",
-  "com.novus" %% "salat" % "1.9.2-SNAPSHOT",
+  "com.novus" %% "salat-core" % "1.9.2-SNAPSHOT",
   "redis.clients" % "jedis" % "2.0.0",
   "com.typesafe.akka" %% "akka-actor" % "2.1.0",
   "com.typesafe.akka" %% "akka-kernel" % "2.1.0",
