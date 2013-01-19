@@ -10,8 +10,8 @@ scalaVersion := "2.10.0"
 publishTo := Some(Resolver.file("repository", new File("/var/www/repository")))
 
 libraryDependencies ++= Seq(
-  "org.mongodb" %% "casbah-core" % "2.5.0-SNAPSHOT",
-  "org.mongodb" %% "casbah-query" % "2.5.0-SNAPSHOT",
+  "org.mongodb" %% "casbah-core" % "2.5.0",
+  "org.mongodb" %% "casbah-query" % "2.5.0",
   "com.novus" %% "salat-core" % "1.9.2-SNAPSHOT",
   "redis.clients" % "jedis" % "2.0.0",
   "com.typesafe.akka" %% "akka-actor" % "2.1.0",
