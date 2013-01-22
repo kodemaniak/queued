@@ -28,7 +28,6 @@ scalacOptions ++= Seq("-encoding", "UTF-8", "-deprecation", "-unchecked", "-feat
 
 resolvers ++= Seq(
   "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
-  "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
-  "kreuzverweis" at "https://repository.kreuzverweis.com/"
+  "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 )
 
