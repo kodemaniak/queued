@@ -25,12 +25,12 @@ case object Working extends PollingState
 case object Stopped extends PollingState
 
 class QueuePollingActor[M <: AnyRef]
-    (queue: PersistentQueue[M], workerBuilder: ActorContext => ActorRef, initialDelay: FiniteDuration = 0 seconds, frequency: FiniteDuration = 1 second)
+    (queue: PersistentQueue[M], workerBuilder: ActorContext => ActorRef, maxNrOfRetries: Int = -1, frequency: FiniteDuration = 1 second)
 extends Actor with FSM[PollingState, Option[M]] {
 
   var worker: ActorRef = _
 
-  override val supervisorStrategy = OneForOneStrategy() {
+  override val supervisorStrategy = OneForOneStrategy(maxNrOfRetries = maxNrOfRetries) {
     case e: Exception =>
       log.error("Requeueing job.")
       log.error(e.getMessage)

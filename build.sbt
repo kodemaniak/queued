@@ -2,7 +2,7 @@ organization := "kv"
 
 name := "queued"
 
-version := "0.3.0-SNAPSHOT"
+version := "0.3.1"
 
 scalaVersion := "2.10.0"
 

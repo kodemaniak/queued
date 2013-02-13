@@ -110,7 +110,7 @@ class QueuePollingTest(_system: ActorSystem) extends TestKit(_system) with FlatS
     val msg = mock(classOf[TestMessage])
     mockQueue.enqueue(msg)
     val probe = TestProbe()
-    val q = TestFSMRef(new QueuePollingActor(mockQueue, (context => probe.ref), 0 seconds, 10 seconds))
+    val q = TestFSMRef(new QueuePollingActor(mockQueue, (context => probe.ref), frequency = 10 seconds))
     q ! Poll
     probe.expectMsg(msg)
     Thread.sleep(10000)
@@ -129,7 +129,7 @@ class QueuePollingTest(_system: ActorSystem) extends TestKit(_system) with FlatS
           sender ! Acknowledge
           throw new Exception
       }
-    }))))
+    })), 1))
     q ! Poll
     Thread.sleep(1000)
     q.stateName should be(Polling)
