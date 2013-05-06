@@ -9,7 +9,6 @@ import org.mockito.Mockito._
 import akka.testkit.TestProbe
 import akka.actor.ActorSystem
 import com.typesafe.config.ConfigFactory
-import scala.collection.mutable.Queue
 import org.scalatest.BeforeAndAfterAll
 import akka.event.LoggingReceive
 import akka.actor.Actor
@@ -135,16 +134,4 @@ class QueuePollingTest(_system: ActorSystem) extends TestKit(_system) with FlatS
     q.stateName should be(Polling)
     mockQueue.length should be(1)
   }
-}
-
-class MemoryQueue[M <: AnyRef] extends PersistentQueue[M] {
-  val queue = Queue[M]()
-
-  def enqueue(elem: M) {
-    queue.enqueue(elem)
-  }
-
-  def dequeue = queue.dequeueFirst(_ => true)
-
-  def length = queue.length
 }
