@@ -2,7 +2,7 @@ organization := "kv"
 
 name := "queued"
 
-version := "0.3.3-SNAPSHOT"
+version := "0.3.3"
 
 scalaVersion := "2.10.0"
 
@@ -14,11 +14,11 @@ libraryDependencies ++= Seq(
   "org.mongodb" %% "casbah-query" % "2.5.0",
   "com.novus" %% "salat-core" % "1.9.2-SNAPSHOT",
   "redis.clients" % "jedis" % "2.0.0",
-  "com.typesafe.akka" %% "akka-actor" % "2.1.0",
-  "com.typesafe.akka" %% "akka-kernel" % "2.1.0",
-  "com.typesafe.akka" %% "akka-remote" % "2.1.0",
-  "com.typesafe.akka" %% "akka-slf4j" % "2.1.0",
-  "com.typesafe.akka" %% "akka-testkit" % "2.1.0" % "test",
+  "com.typesafe.akka" %% "akka-actor" % "2.1.4" % "compile",
+  "com.typesafe.akka" %% "akka-kernel" % "2.1.4" % "compile",
+  "com.typesafe.akka" %% "akka-remote" % "2.1.4" % "compile",
+  "com.typesafe.akka" %% "akka-slf4j" % "2.1.4" % "compile",
+  "com.typesafe.akka" %% "akka-testkit" % "2.1.4" % "test",
   "org.scalatest" %% "scalatest" % "1.9.1" % "test,it",
   "org.mockito" % "mockito-core" % "1.9.0" % "test",
   "org.clapper" %% "avsl" % "1.0.1"
